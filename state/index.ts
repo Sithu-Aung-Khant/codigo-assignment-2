@@ -83,7 +83,7 @@ export const teamsSlice = createSlice({
   initialState: initialTeamsState,
   reducers: {
     addTeam: (state, action: PayloadAction<Team>) => {
-      state.teams.unshift(action.payload);
+      state.teams = [action.payload, ...state.teams];
     },
     updateTeam: (state, action: PayloadAction<Team>) => {
       const index = state.teams.findIndex(
