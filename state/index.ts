@@ -26,8 +26,12 @@ export interface AuthState {
 }
 
 const initialAuthState: AuthState = {
-  isAuthenticated: !!localStorage.getItem('auth_token'),
-  user: localStorage.getItem('auth_user'),
+  isAuthenticated:
+    typeof window !== 'undefined'
+      ? !!localStorage.getItem('auth_token')
+      : false,
+  user:
+    typeof window !== 'undefined' ? localStorage.getItem('auth_user') : null,
 };
 
 export const authSlice = createSlice({
