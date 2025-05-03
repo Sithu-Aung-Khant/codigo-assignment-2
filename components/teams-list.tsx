@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/redux';
-import { addTeam, updateTeam, deleteTeam } from '@/state';
+import { addTeam, updateTeam, deleteTeam, removePlayerFromTeam } from '@/state';
 import {
   Card,
   CardContent,
@@ -228,7 +228,7 @@ export default function TeamsList() {
               players: [],
             }}
             onRemovePlayer={(teamId, playerId) => {
-              console.log(`Remove player ${playerId} from team ${teamId}`);
+              dispatch(removePlayerFromTeam({ teamId, playerId }));
             }}
           />
         </>

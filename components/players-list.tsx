@@ -22,6 +22,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { BalldontlieAPI } from '@balldontlie/sdk';
+import { addPlayerToTeam } from '@/state';
+import { useAppSelector } from '@/app/redux';
+import { useAppDispatch } from '@/app/redux';
 
 const api = new BalldontlieAPI({
   apiKey: process.env.NEXT_PUBLIC_BALLDONTLIE_API_KEY || '',
@@ -56,11 +59,17 @@ export default function PlayersList() {
   const [loading, setLoading] = useState(true);
   const [nextCursor, setNextCursor] = useState<number | null>(null);
   const [hasMore, setHasMore] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState('');
-  const [playersInTeams, setPlayersInTeams] = useState<number[]>([]); // Local state for players in teams
+  const [selectedTeam, setSelectedTeam] = useState<string | undefined>(
+    undefined
+  );
+  const [playersInTeams, setPlayersInTeams] = useState<number[]>([]);
   const observer = useRef<IntersectionObserver | null>(null);
   const lastPlayerRef = useRef<HTMLDivElement | null>(null);
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
+
+  // Fetch teams from the Redux store
+  const teams = useAppSelector((state) => state.teams.teams);
 
   const fetchPlayers = async (cursor: number | null = null) => {
     try {
@@ -125,7 +134,7 @@ export default function PlayersList() {
       return;
     }
 
-    // Add player to local state (replace with API call if needed)
+    dispatch(addPlayerToTeam({ teamId: selectedTeam, playerId: player.id }));
     setPlayersInTeams((prev) => [...prev, player.id]);
 
     toast({
@@ -144,9 +153,12 @@ export default function PlayersList() {
               <SelectValue placeholder='Select a team' />
             </SelectTrigger>
             <SelectContent>
-              {/* Replace with your teams data */}
-              <SelectItem value='team1'>Team 1</SelectItem>
-              <SelectItem value='team2'>Team 2</SelectItem>
+              {/* Map over the teams from the Redux store */}
+              {teams.map((team) => (
+                <SelectItem key={team.id} value={team.id.toString()}>
+                  {team.full_name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

@@ -70,12 +70,14 @@ export interface Team {
   country: string;
 }
 
-export interface TeamsState {
+interface TeamsState {
   teams: Team[];
+  teamPlayers: Record<string, number[]>; // teamId -> playerId[]
 }
 
 const initialTeamsState: TeamsState = {
   teams: [],
+  teamPlayers: {},
 };
 
 export const teamsSlice = createSlice({
@@ -94,14 +96,40 @@ export const teamsSlice = createSlice({
       }
     },
     deleteTeam: (state, action: PayloadAction<number>) => {
-      console.log('Deleting team with ID:', action.payload);
       state.teams = state.teams.filter((team) => team.id !== action.payload);
-      console.log('Updated teams:', state.teams);
+      delete state.teamPlayers[action.payload.toString()];
+    },
+    addPlayerToTeam: (
+      state,
+      action: PayloadAction<{ teamId: string; playerId: number }>
+    ) => {
+      const { teamId, playerId } = action.payload;
+      if (!state.teamPlayers[teamId]) {
+        state.teamPlayers[teamId] = [];
+      }
+      state.teamPlayers[teamId].push(playerId);
+    },
+    removePlayerFromTeam: (
+      state,
+      action: PayloadAction<{ teamId: string; playerId: number }>
+    ) => {
+      const { teamId, playerId } = action.payload;
+      if (state.teamPlayers[teamId]) {
+        state.teamPlayers[teamId] = state.teamPlayers[teamId].filter(
+          (id) => id !== playerId
+        );
+      }
     },
   },
 });
 
-export const { addTeam, updateTeam, deleteTeam } = teamsSlice.actions;
+export const {
+  addTeam,
+  updateTeam,
+  deleteTeam,
+  addPlayerToTeam,
+  removePlayerFromTeam,
+} = teamsSlice.actions;
 
 // Export the reducers as named exports
 export const globalReducer = globalSlice.reducer;
