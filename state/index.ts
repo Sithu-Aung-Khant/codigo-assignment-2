@@ -72,7 +72,7 @@ export interface Team {
 
 interface TeamsState {
   teams: Team[];
-  teamPlayers: Record<string, number[]>; // teamId -> playerId[]
+  teamPlayers: Record<string, number[]>;
 }
 
 const initialTeamsState: TeamsState = {
