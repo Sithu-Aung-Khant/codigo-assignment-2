@@ -96,7 +96,7 @@ export default function TeamsList() {
   };
 
   const handleCreateTeam = (team: Team) => {
-    dispatch(addTeam(team));
+    console.log(team);
     setIsCreateModalOpen(false);
   };
 
