@@ -153,9 +153,21 @@ export default function TeamsList() {
             <Card key={index}>
               <CardHeader>
                 <CardTitle>{team.full_name}</CardTitle>
-                <CardDescription>
-                  {team.city}, {team.conference} - {team.division}
-                </CardDescription>
+                {[
+                  team.city?.trim(),
+                  team.conference?.trim(),
+                  team.division?.trim(),
+                ].filter((val) => val && val.length > 0).length > 0 && (
+                  <CardDescription>
+                    {[
+                      team.city?.trim(),
+                      team.conference?.trim(),
+                      team.division?.trim(),
+                    ]
+                      .filter((val) => val && val.length > 0)
+                      .join(', ')}
+                  </CardDescription>
+                )}
               </CardHeader>
               <CardContent>
                 <div className='flex items-center gap-2'>
