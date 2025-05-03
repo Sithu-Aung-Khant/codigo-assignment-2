@@ -29,6 +29,7 @@ const api = new BalldontlieAPI({
 export default function TeamsList() {
   const dispatch = useAppDispatch();
   const teams = useAppSelector((state) => state.teams.teams);
+  console.log('Teams in component:', teams);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -69,6 +70,7 @@ export default function TeamsList() {
   };
 
   const handleOpenDeleteDialog = (teamId: number) => {
+    console.log('Opening delete dialog for team:', teamId);
     setSelectedTeam(teamId);
     setIsDeleteDialogOpen(true);
   };
@@ -80,12 +82,16 @@ export default function TeamsList() {
 
   const handleDeleteTeam = () => {
     if (selectedTeam) {
+      console.log('Before dispatch - selectedTeam:', selectedTeam);
       dispatch(deleteTeam(selectedTeam));
+      console.log('After dispatch - selectedTeam:', selectedTeam);
       toast({
         title: 'Team deleted',
         description: 'The team has been successfully deleted',
       });
       setIsDeleteDialogOpen(false);
+    } else {
+      console.log('No team selected for deletion');
     }
   };
 
@@ -143,8 +149,8 @@ export default function TeamsList() {
         </div>
       ) : (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-          {teams.map((team) => (
-            <Card key={team.id}>
+          {teams.map((team, index) => (
+            <Card key={index}>
               <CardHeader>
                 <CardTitle>{team.full_name}</CardTitle>
                 <CardDescription>

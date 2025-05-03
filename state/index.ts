@@ -94,7 +94,9 @@ export const teamsSlice = createSlice({
       }
     },
     deleteTeam: (state, action: PayloadAction<number>) => {
+      console.log('Deleting team with ID:', action.payload);
       state.teams = state.teams.filter((team) => team.id !== action.payload);
+      console.log('Updated teams:', state.teams);
     },
   },
 });
